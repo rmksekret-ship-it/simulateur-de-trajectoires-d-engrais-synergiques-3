@@ -1,0 +1,46 @@
+{
+  "name": "Simulateur de Trajectoires d'Engrais Synergiques",
+  "description": "Calculez les mélanges d",
+  "theme": "calculator",
+  "design_theme": "solarpunk-signal",
+  "structure_preset": "metric-grid",
+  "render_direction": "atlas-report",
+  "page_blueprint": "briefing-board",
+  "language": "fr",
+  "country": "FR",
+  "url": null,
+  "expected_url": "https://simulateur-de-trajectoires-d-engrais-synergiques-3.onrender.com",
+  "created": "2026-06-11T01:33:25.581548+00:00",
+  "owner_user_id": "user-1774825923424-663",
+  "owner_username": "inso",
+  "owner_display_name": "Inso",
+  "provider_space_id": "new-sites",
+  "provider_space_name": "New Sites",
+  "status": "generated",
+  "run_id": "run-1781141190538",
+  "external_site_request_id": null,
+  "external_client_ref": null,
+  "external_source_label": null,
+  "source_type": "generated",
+  "publish_target": "render",
+  "mode": "production",
+  "github": {
+    "status": "pending"
+  },
+  "deployment": {
+    "status": "pending"
+  },
+  "qa": {
+    "status": "pending"
+  },
+  "features": [
+    "Hero pattern: command",
+    "Proof module: metrics",
+    "Design theme: Solarpunk Signal",
+    "Render direction: Atlas Report",
+    "Page blueprint: Briefing Board",
+    "Runtime mode: generic_calculator",
+    "Generation mode: direct_html",
+    "Artifact rendered, awaiting QA and deployment"
+  ]
+}
