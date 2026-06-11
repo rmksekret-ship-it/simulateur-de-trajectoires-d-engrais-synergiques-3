@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Trajectoires d&#x27;Engrais Synergiques | Votre Assistant Synergique</title>
+    <meta name="description" content="Calculez les mélanges d">
+    <style>
+        :root {
+            --color-primary: #32CD32; /* Lime Green */
+            --color-secondary: #FFD700; /* Gold */
+            --color-background: #F0FFF0; /* Honeydew */
+            --color-surface: #FFFFFF;
+            --color-text: #2F4F4F; /* Dark Slate Gray */
+            --color-light-text: #696969; /* Dim Gray */
+            --font-headline: 'Arial Black', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --grid-gap: 20px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            margin: 0;
+            background-color: var(--color-background);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-headline);
+            color: var(--color-text);
+            margin-top: 0;
+        }
+
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            padding: 40px var(--grid-gap);
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            color: var(--color-surface);
+            font-size: 3em;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--grid-gap);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--grid-gap);
+            flex-grow: 1;
+        }
+
+        .section {
+            background-color: var(--color-surface);
+            padding: var(--grid-gap) * 1.5;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tool-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--grid-gap);
+        }
+
+        #tool-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-light-text);
+        }
+
+        #tool-form input[type="number"],
+        #tool-form select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #tool-submit {
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        #tool-submit:hover {
+            background-color: #28a745; /* Darker green */
+        }
+
+        #tool-result {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: var(--grid-gap);
+            border-radius: 8px;
+            margin-top: var(--grid-gap);
+            white-space: pre-wrap;
+            font-family: monospace;
+            color: var(--color-text);
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--grid-gap);
+        }
+
+        .metric-card {
+            background-color: #F8F8F8; /* White Smoke */
+            padding: var(--grid-gap);
+            border-radius: 8px;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            color: var(--color-primary);
+            margin-bottom: 5px;
+            font-size: 1.5em;
+        }
+
+        .metric-card p {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        .seo-section {
+            background-color: #E6FFE6; /* Lightest Green */
+            padding: var(--grid-gap);
+            border-radius: 8px;
+            margin-top: var(--grid-gap);
+            color: var(--color-light-text);
+        }
+
+        .seo-section h2 {
+            color: var(--color-primary);
+            text-align: center;
+        }
+
+        .seo-section ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px;
+        }
+
+        .seo-section li {
+            background-color: var(--color-surface);
+            padding: 10px 15px;
+            border-left: 3px solid var(--color-secondary);
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            background-color: var(--color-text);
+            color: var(--color-surface);
+            text-align: center;
+            padding: 20px var(--grid-gap);
+            margin-top: var(--grid-gap);
+            font-size: 0.9em;
+        }
+
+        @media (min-width: 768px) {
+            .tool-section {
+                grid-template-columns: 2fr 3fr;
+            }
+        }
+    </style>
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simulateur-de-trajectoires-d-engrais-synergiques-3.onrender.com">
+    <meta property="og:title" content="Simulateur de Trajectoires d&#x27;Engrais Synergiques">
+    <meta property="og:description" content="Calculez les mélanges d">
+    <meta property="og:url" content="https://simulateur-de-trajectoires-d-engrais-synergiques-3.onrender.com">
+    <meta property="og:type" content="website">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Simulateur de Trajectoires d'Engrais Synergiques", "description": "Calculez les mélanges d", "url": "https://simulateur-de-trajectoires-d-engrais-synergiques-3.onrender.com", "applicationCategory": "UtilityApplication", "operatingSystem": "Web Browser"}</script>
+</head>
+<body data-site-slug="simulateur-de-trajectoires-d-engrais-synergiques-3" data-runtime-mode="generic_calculator">
+    <header>
+        <h1>Simulateur de Trajectoires d'Engrais Synergiques</h1>
+        <p>Optimisez vos apports nutritifs pour une croissance végétale dynamique et durable. Calculez les mélanges d'engrais optimaux pour synergiser leurs effets sur différentes cultures, en minimisant les déchets.</p>
+    </header>
+
+    <main class="container">
+        <section class="section tool-section">
+            <div>
+                <h2>Votre Assistant Synergique</h2>
+                <p>Définissez les paramètres de votre culture et de vos engrais pour découvrir la combinaison la plus efficace.</p>
+                <form id="tool-form">
+                    <label for="culture">Type de Culture :</label>
+                    <select id="culture" name="culture">
+                        <option value="cereale">Céréales (Blé, Maïs)</option>
+                        <option value="legume">Légumes (Tomate, Salade)</option>
+                        <option value="fruit">Arbres Fruitiers (Pomme, Poire)</option>
+                        <option value="vigne">Vigne</option>
+                    </select>
+
+                    <label for="nutrientN">Teneur N (Azote) de l'engrais 1 (%) :</label>
+                    <input type="number" id="nutrientN" name="nutrientN" value="20" min="0" max="100" step="1">
+
+                    <label for="nutrientP">Teneur P (Phosphore) de l'engrais 1 (%) :</label>
+                    <input type="number" id="nutrientP" name="nutrientP" value="10" min="0" max="100" step="1">
+
+                    <label for="nutrientK">Teneur K (Potassium) de l'engrais 1 (%) :</label>
+                    <input type="number" id="nutrientK" name="nutrientK" value="10" min="0" max="100" step="1">
+
+                    <label for="doseBase">Dose de l'engrais 1 (kg/ha) :</label>
+                    <input type="number" id="doseBase" name="doseBase" value="100" min="1" step="1">
+
+                    <label for="nutrientN2">Teneur N (Azote) de l'engrais 2 (%) :</label>
+                    <input type="number" id="nutrientN2" name="nutrientN2" value="10" min="0" max="100" step="1">
+
+                    <label for="nutrientP2">Teneur P (Phosphore) de l'engrais 2 (%) :</label>
+                    <input type="number" id="nutrientP2" name="nutrientP2" value="20" min="0" max="100" step="1">
+
+                    <label for="nutrientK2">Teneur K (Potassium) de l'engrais 2 (%) :</label>
+                    <input type="number" id="nutrientK2" name="nutrientK2" value="20" min="0" max="100" step="1">
+
+                    <label for="doseRatio">Ratio de mélange (Engrais 2 / Engrais 1) :</label>
+                    <input type="number" id="doseRatio" name="doseRatio" value="0.5" min="0" max="2" step="0.1">
+
+                    <button type="submit" id="tool-submit" data-affiliate-slot="primary-tool">Calculer l'Optimum</button>
+                </form>
+            </div>
+            <div>
+                <h2>Résultats de la Simulation</h2>
+                <div id="tool-result">
+                    <p id="result-detail">Vos résultats personnalisés apparaîtront ici après le calcul.</p>
+                    <p>Cet outil évalue l'équilibre NPK total et suggère des ajustements pour maximiser la synergie.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Comprendre la Synergie Nutritive</h2>
+            <p>La synergie entre les nutriments est cruciale. Par exemple, une bonne disponibilité de Potassium peut améliorer l'absorption d'Azote, et le Phosphore est vital pour le développement racinaire, qui à son tour favorise l'accès aux autres éléments. Notre simulateur prend en compte ces interactions complexes pour vous proposer des recommandations équilibrées.</p>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <h3>Réduction des Déchets</h3>
+                    <p>Jusqu'à 30%</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Gain de Rendement</h3>
+                    <p>5% - 15%</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Santé des Sols</h3>
+                    <p>Améliorée</p>
+                </div>
+                <div class="metric-card">
+                    <h3>Coût/Ha</h3>
+                    <p>Optimisé</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section seo-section">
+            <h2>Optimisation des Engrais : Questions Fréquentes</h2>
+            <ul>
+                <li><strong>Comment optimiser l'engrais pour ma culture ?</strong> Utilisez notre simulateur pour calculer les ratios NPK idéaux, adaptés à vos besoins spécifiques et types de culture.</li>
+                <li><strong>Quel est le meilleur mélange d'engrais NPK ?</strong> Il n'y a pas de "meilleur" mélange universel ; cela dépend de votre sol, de la culture et de ses stades de croissance. Notre outil vous aide à trouver votre optimum.</li>
+                <li><strong>Calculer apport nutritif précis.</strong> Notre simulateur prend en compte la teneur en NPK de vos deux engrais et leur ratio de mélange pour une précision accrue.</li>
+                <li><strong>Engrais synergique pour jardin professionnel.</strong> Conçu pour les agriculteurs et jardiniers avancés, notre outil maximise l'efficacité de vos fertilisants en exploitant les synergies nutritives.</li>
+                <li><strong>Réduire sur-fertilisation agricole.</strong> En calculant la dose optimale et le mélange idéal, vous évitez le gaspillage et l'impact environnemental de la sur-fertilisation.</li>
+                <li><strong>Logiciel de gestion des fertilisants.</strong> Cet outil en ligne offre une simulation rapide pour vous aider dans vos décisions de fertilisation, sans installation complexe.</li>
+                <li><strong>Améliorer rendement agricole avec engrais.</strong> La synergie des nutriments est un levier majeur pour des rendements supérieurs et une meilleure qualité de récolte.</li>
+                <li><strong>Guide d'application engrais potager.</strong> Même pour un potager avancé, une approche scientifique des apports nutritifs est source de succès.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Signal Solaire. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.getElementById('tool-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const culture = document.getElementById('culture').value;
+            const nutrientN = parseFloat(document.getElementById('nutrientN').value);
+            const nutrientP = parseFloat(document.getElementById('nutrientP').value);
+            const nutrientK = parseFloat(document.getElementById('nutrientK').value);
+            const doseBase = parseFloat(document.getElementById('doseBase').value);
+            const nutrientN2 = parseFloat(document.getElementById('nutrientN2').value);
+            const nutrientP2 = parseFloat(document.getElementById('nutrientP2').value);
+            const nutrientK2 = parseFloat(document.getElementById('nutrientK2').value);
+            const doseRatio = parseFloat(document.getElementById('doseRatio').value);
+
+            if (isNaN(nutrientN) || isNaN(nutrientP) || isNaN(nutrientK) || isNaN(doseBase) ||
+                isNaN(nutrientN2) || isNaN(nutrientP2) || isNaN(nutrientK2) || isNaN(doseRatio)) {
+                document.getElementById('tool-result').innerHTML = "<p>Veuillez entrer des valeurs numériques valides pour tous les champs.</p>";
+                return;
+            }
+
+            const doseEngrais2 = doseBase * doseRatio;
+            const totalDose = doseBase + doseEngrais2;
+
+            const totalN = ((nutrientN / 100) * doseBase + (nutrientN2 / 100) * doseEngrais2) / totalDose * 100;
+            const totalP = ((nutrientP / 100) * doseBase + (nutrientP2 / 100) * doseEngrais2) / totalDose * 100;
+            const totalK = ((nutrientK / 100) * doseBase + (nutrientK2 / 100) * doseEngrais2) / totalDose * 100;
+
+            let recommendation = "Vos apports sont optimisés pour une croissance équilibrée.";
+            if (culture === "cereale") {
+                if (totalN < 18) recommendation = "Pour les céréales, une teneur en Azote légèrement plus élevée (autour de 20-25%) pourrait stimuler le tallage.";
+                if (totalP < 8) recommendation = "Un apport suffisant en Phosphore est essentiel pour le développement racinaire des céréales.";
+                if (totalK < 8) recommendation = "Le Potassium renforce la tige et la résistance aux maladies des céréales. Considérez un ajustement.";
+            } else if (culture === "legume") {
+                if (totalN < 15 && totalN > 25) recommendation = "Pour les légumes, un bon équilibre NPK est crucial. Si l'azote est trop faible, la croissance foliaire sera limitée. Si l'azote est trop élevé, au détriment des autres, la fructification peut être affectée.";
+                if (totalP < 10) recommendation = "Le Phosphore est vital pour la floraison et la fructification des légumes. Assurez un apport adéquat.";
+                if (totalK < 15) recommendation = "Un niveau de Potassium plus élevé peut améliorer la qualité des fruits et la résistance au stress des légumes.";
+            } else if (culture === "fruit") {
+                 if (totalN < 12) recommendation = "Les arbres fruitiers nécessitent de l'azote pour la croissance végétative, mais attention à ne pas surdoser pour la fructification.";
+                 if (totalP < 15) recommendation = "Le Phosphore favorise la floraison et le développement des fruits. Un apport soutenu est bénéfique.";
+                 if (totalK < 20) recommendation = "Un apport élevé en Potassium est souvent recherché pour la taille, la couleur et le goût des fruits.";
+            } else if (culture === "vigne") {
+                if (totalN < 10) recommendation = "Pour la vigne, l'azote doit être géré finement pour éviter une croissance excessive au détriment de la qualité du raisin.";
+                if (totalP < 8) recommendation = "Le phosphore est important pour le développement des jeunes pousses et la maturation des grappes.";
+                if (totalK < 20) recommendation = "La vigne est gourmande en potassium, crucial pour la qualité du moût et la résistance de la plante.";
+            }
+
+
+            const resultHtml = `
+                <h3>Bilan des Nutriments Mélangés :</h3>
+                <p><strong>Culture sélectionnée :</strong> ${document.querySelector(`#culture option[value="${culture}"]`).textContent}</p>
+                <p><strong>Dose d'Engrais 1 :</strong> ${doseBase.toFixed(1)} kg/ha</p>
+                <p><strong>Dose d'Engrais 2 :</strong> ${doseEngrais2.toFixed(1)} kg/ha</p>
+                <p><strong>Ratio de mélange (E2/E1) :</strong> ${doseRatio.toFixed(1)}</p>
+                <p><strong>Teneur NPK totale (pour la dose mélangée) :</strong></p>
+                <ul>
+                    <li>Azote (N) : ${totalN.toFixed(2)} %</li>
+                    <li>Phosphore (P) : ${totalP.toFixed(2)} %</li>
+                    <li>Potassium (K) : ${totalK.toFixed(2)} %</li>
+                </ul>
+                <h4>Recommandation Synergique :</h4>
+                <p>${recommendation}</p>
+                <p>Cette simulation fournit une base pour vos décisions. Une analyse de sol reste indispensable pour des apports personnalisés.</p>
+            `;
+            document.getElementById('tool-result').innerHTML = resultHtml;
+        });
+    </script>
+<div id="qa-smoke-result" hidden></div>
+<script id="farmbuilder-affiliate-helper">
+(function () {
+  window.__UTILITY_AFFILIATE_MAP = window.__UTILITY_AFFILIATE_MAP || {};
+  document.addEventListener("click", function (event) {
+    const target = event.target.closest("[data-affiliate-slot]");
+    if (!target) return;
+    const slot = target.getAttribute("data-affiliate-slot");
+    const href = window.__UTILITY_AFFILIATE_MAP[slot];
+    if (!href) return;
+    if (target.tagName && target.tagName.toLowerCase() === "a") {
+      target.setAttribute("href", href);
+      target.removeAttribute("rel");
+      return;
+    }
+    event.preventDefault();
+    window.open(href, "_blank");
+  }, true);
+})();
+</script>
+<script id="farmbuilder-functional-qa">
+(function () {
+  function marker() {
+    let node = document.getElementById("qa-smoke-result");
+    if (node) return node;
+    node = document.createElement("div");
+    node.id = "qa-smoke-result";
+    node.hidden = true;
+    document.body.appendChild(node);
+    return node;
+  }
+
+  let qaFinished = false;
+  let qaWatchdog = null;
+
+  function normalize(text) {
+    return String(text || "").replace(/\s+/g, " ").trim();
+  }
+
+  function findForm() {
+    return document.getElementById("tool-form") || document.querySelector("form");
+  }
+
+  function findResult() {
+    return (
+      document.getElementById("tool-result") ||
+      document.querySelector("[data-result]") ||
+      document.querySelector(".tool-result, .result-card, .result, .results, .output, .preview, .diagnostic, .analysis")
+    );
+  }
+
+  function primaryAction(form) {
+    if (!form) return null;
+    return (
+      document.getElementById("tool-submit") ||
+      form.querySelector("#tool-submit") ||
+      form.querySelector("[data-primary-action]") ||
+      form.querySelector("button[type=submit]") ||
+      form.querySelector("button") ||
+      form.querySelector("input[type=submit]")
+    );
+  }
+
+  function resultSignature(node) {
+    if (!node) return "";
+    const text = normalize(node.textContent);
+    const html = normalize(node.innerHTML).slice(0, 600);
+    return `${text}||${html}`;
+  }
+
+  function resultHeadline(node) {
+    if (!node) return "";
+    const heading = node.querySelector("h1, h2, h3, strong, b");
+    return normalize(heading ? heading.textContent : "");
+  }
+
+  function sampleText(field) {
+    const key = `${field.id || ""} ${field.name || ""} ${field.placeholder || ""}`.toLowerCase();
+    if (/email/.test(key)) return "bonjour@example.com";
+    if (/url|site|website|lien/.test(key)) return "https://example.com/offre-solaire";
+    if (/phone|tel|mobile/.test(key)) return "0612345678";
+    if (/ville|city|localisation|location|region|departement|postal/.test(key)) return "Paris";
+    if (/orientation/.test(key)) return "sud";
+    if (/keyword|theme|topic|sujet|subject/.test(key)) return "energie solaire domestique";
+    if (/titre|title/.test(key)) return "Simulateur solaire maison";
+    if (/nom|name|project/.test(key)) return "Projet Horizon";
+    if (/description|notes|content|message/.test(key)) return "Maison individuelle exposee sud avec toiture exploitable.";
+    return field.placeholder || "France";
+  }
+
+  function sampleNumber(field) {
+    const key = `${field.id || ""} ${field.name || ""}`.toLowerCase();
+    if (/inclinaison|angle|slope/.test(key)) return "30";
+    if (/surface|size|m2|sqm/.test(key)) return "28";
+    if (/annee|year/.test(key)) return "2024";
+    if (/prix|price|budget|cost|amount|montant/.test(key)) return "12000";
+    const min = Number(field.min || "");
+    const max = Number(field.max || "");
+    if (Number.isFinite(min) && Number.isFinite(max) && max >= min) {
+      return String(Math.min(max, Math.max(min, min + Math.round((max - min) * 0.35))));
+    }
+    if (Number.isFinite(min)) return String(Math.max(min, 12));
+    if (Number.isFinite(max)) return String(Math.min(max, 12));
+    return field.value || "12";
+  }
+
+  function applySample(field) {
+    const tag = (field.tagName || "").toLowerCase();
+    const type = (field.type || "").toLowerCase();
+    if (field.disabled) return;
+    if (type === "hidden" || type === "submit" || type === "button" || type === "reset" || type === "image" || type === "file") {
+      return;
+    }
+    const currentValue = normalize(field.value);
+    if (tag === "select") {
+      if (currentValue) return;
+      const option = Array.from(field.options || []).find((item) => item.value && !item.disabled) || field.options[0];
+      if (option) field.value = option.value;
+      return;
+    }
+    if (type === "checkbox") {
+      if (field.checked) return;
+      field.checked = true;
+      return;
+    }
+    if (type === "radio") {
+      if (field.checked) return;
+      field.checked = true;
+      return;
+    }
+    if (type === "date") {
+      if (currentValue) return;
+      field.value = "2026-03-01";
+      return;
+    }
+    if (type === "email") {
+      if (currentValue) return;
+      field.value = "bonjour@example.com";
+      return;
+    }
+    if (type === "url") {
+      if (currentValue) return;
+      field.value = "https://example.com/offre-solaire";
+      return;
+    }
+    if (type === "tel") {
+      if (currentValue) return;
+      field.value = "0612345678";
+      return;
+    }
+    if (type === "color") {
+      if (currentValue) return;
+      field.value = "#2f855a";
+      return;
+    }
+    if (type === "number" || type === "range") {
+      if (currentValue) return;
+      field.value = sampleNumber(field);
+      return;
+    }
+    if (currentValue) return;
+    field.value = sampleText(field);
+  }
+
+  function stamp(status, detail, headline, primary) {
+    if (qaFinished) return;
+    qaFinished = true;
+    if (qaWatchdog) {
+      window.clearTimeout(qaWatchdog);
+      qaWatchdog = null;
+    }
+    const node = marker();
+    node.dataset.status = status;
+    node.dataset.mode = "native-form";
+    node.dataset.detail = detail || "";
+    node.dataset.headline = headline || "";
+    node.dataset.primary = primary || "";
+    node.dataset.viewport = window.innerWidth <= 640 ? "mobile" : "desktop";
+    window.setTimeout(function () {
+      try {
+        window.stop();
+      } catch (_error) {}
+    }, 0);
+  }
+
+  function installModalGuards() {
+    const noop = function () {};
+    const approve = function () { return true; };
+    const empty = function () { return ""; };
+    try { window.alert = noop; } catch (_error) {}
+    try { window.confirm = approve; } catch (_error) {}
+    try { window.prompt = empty; } catch (_error) {}
+  }
+
+  function triggerAction(form, action) {
+    try {
+      if (typeof form.requestSubmit === "function") {
+        form.requestSubmit(action || undefined);
+        return;
+      }
+    } catch (_error) {}
+    if (action && typeof action.click === "function") {
+      action.click();
+      return;
+    }
+    form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+  }
+
+  function inspectResult(before, attemptsLeft) {
+    const result = findResult();
+    if (!result) {
+      stamp("fail", "La zone de resultat est introuvable.", "");
+      return;
+    }
+    const after = resultSignature(result);
+    const text = normalize(result.textContent);
+    if (after && after !== before && text.length >= 24) {
+      const primary = result.querySelector("a[href], button[data-href], [data-primary-url]") || document.querySelector("#tool-result a[href]");
+      stamp("pass", "Le formulaire natif a mis a jour la zone de resultat.", resultHeadline(result), primary ? (primary.getAttribute("href") || primary.getAttribute("data-primary-url") || "") : "");
+      return;
+    }
+    if (attemptsLeft > 0) {
+      window.setTimeout(function () {
+        inspectResult(before, attemptsLeft - 1);
+      }, 250);
+      return;
+    }
+    stamp("fail", "La zone de resultat n'a pas renvoye de contenu exploitable.", resultHeadline(result));
+  }
+
+  function runSmoke() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("__qa") !== "functional") return;
+    qaWatchdog = window.setTimeout(function () {
+      stamp("fail", "QA smoke timed out before the page reported a usable result.", "");
+    }, 7000);
+    const form = findForm();
+    if (!form) {
+      stamp("fail", "Le formulaire principal est introuvable.", "");
+      return;
+    }
+    const result = findResult();
+    const before = resultSignature(result);
+    installModalGuards();
+    try {
+      form.querySelectorAll("input, select, textarea").forEach(applySample);
+    } catch (error) {
+      stamp("fail", error && error.message ? `QA smoke sample failed: ${error.message}` : "QA smoke sample failed before submit.", "");
+      return;
+    }
+    const action = primaryAction(form);
+    try {
+      triggerAction(form, action);
+    } catch (error) {
+      stamp("fail", error && error.message ? `QA smoke submit failed: ${error.message}` : "QA smoke submit failed.", "");
+      return;
+    }
+    inspectResult(before, 10);
+  }
+
+  window.addEventListener("error", function (event) {
+    const message = event && event.message ? event.message : "JavaScript runtime error during QA smoke.";
+    stamp("fail", `QA smoke JS error: ${message}`, "");
+  }, { once: true });
+
+  window.addEventListener("unhandledrejection", function (event) {
+    const reason = event && event.reason;
+    const detail = typeof reason === "string"
+      ? reason
+      : reason && reason.message
+        ? reason.message
+        : "Unhandled promise rejection during QA smoke.";
+    stamp("fail", `QA smoke rejection: ${detail}`, "");
+  }, { once: true });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      window.setTimeout(runSmoke, 60);
+    }, { once: true });
+  } else {
+    window.setTimeout(runSmoke, 60);
+  }
+})();
+</script>
+</body>
+</html>
